@@ -7,7 +7,7 @@ Currently it does rudementary exclusion of non-callsign info, only allowing call
 
 It will create ulaw files for any missing nodes in /var/lib/asterisk/sounds/rpt/nodenames which is where allstar looks for customized names. 
 
-Any existing nodes will be skipped. 
+Any existing nodes will be skipped, and new nodes will be created. 
 
 Options:
 - -v enables verbose mode and lists files it skips

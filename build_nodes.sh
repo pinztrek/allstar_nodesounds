@@ -15,8 +15,8 @@ done
 
 # Setup some dirs
 nodelist="/var/log/asterisk/astdb.txt"
-#sounddir="/var/lib/asterisk/sounds"
-sounddir="/tmp/sounds"
+sounddir="/var/lib/asterisk/sounds"
+#sounddir="/tmp/sounds"
 nodesounddir="$sounddir/rpt/nodenames"
 
 # check to make sure key dirs exist and are read/writable as needed
