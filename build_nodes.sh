@@ -2,13 +2,14 @@
 # 2023 Alan Barrow KM4BA
 
 # Save our options
-while getopts "vsd" opts
+while getopts "vsdD" opts
 do
     case "${opts}" in
         v) verbose=1; echo "Verbose mode";;
         s) silent=1;;
-        d) debug=1;;
-        \? ) echo "Usage: $0 -v verbose -s silent -d debugging" ; exit 1;;
+        d) debug=1; echo "Debug on";;
+        D) dryrun=1; echo "Dry-run mode";; 
+        \? ) echo "Usage: $0 [-v] [-s] [-d] [-D]" ; exit 1;;
     esac
 done
 
@@ -18,6 +19,14 @@ nodelist="/var/log/asterisk/astdb.txt"
 sounddir="/var/lib/asterisk/sounds"
 #sounddir="/tmp/sounds"
 nodesounddir="$sounddir/rpt/nodenames"
+
+# only calls beginning with these letters are processed
+callprefix="a,k,n,w"
+
+# regex to match a legit callsign with optional / or - suffix
+#callmatch='[a-z]+[0-9]{1,2}[a-z]+' # more liberal match
+callmatch='^[2349]?[a-z]{1,2}[0-9]{1,2}[a-z]{1,3}[-/]?[[a-zA-Z0-9]*$'
+if [ "$debug" ] ; then echo "Callsign regex is:$callmatch"; fi
 
 # check to make sure key dirs exist and are read/writable as needed
 if [ ! -r "$nodelist" ]
@@ -51,32 +60,53 @@ do
 	if [ "$debug" == 1 ] ; then echo "checking: " $str ; fi
 	node=`echo $str |cut -f1 -d,`
 	call=`echo $str |cut -f2 -d,`
+	call=`echo $call | tr -d '[:space:]'`
 	first=`echo "${call:0:1}"`
 	firstn=`echo "${node:0:1}"`
 	#echo "first is:" $first
-	if [[ ! -f "rpt/nodenames/$node.ulaw" && "$first" =~ [a,k,n,w] && "$firstn" =~ [0-9] ]]
+
+	if [[ "$call" =~ $callmatch ]]
+	then
+		if [ "$debug" ] ; then echo "Is a callsign:" $node $call ; fi
+	else
+		if [ "$verbose" ] ; then echo "not a callsign:" $node $call ; fi
+		continue
+	fi
+
+	if [[ ! -f "rpt/nodenames/$node.ulaw" && "$first" =~ [$callprefix] && "$firstn" =~ [0-9] ]]
 	# no node file, so make one
 	then
 	if [ "$silent" != 1 ] ; then echo "new node is" $node $call ; fi
 		for (( i=0; i<${#call}; i++ )); do
 			X=`echo "${call:$i:1}"`
 			case $X in
-			#if [[ "$X" =~ [a-z] ]]
 			[a-z])
 				#echo "letter " $X
+				if [ ! "$dryrun" ]
+				then
 				cat letters/"$X".ulaw >> rpt/nodenames/"$node".ulaw
+				fi
 				;;
 			[0-9])
+				if [ ! "$dryrun" ]
+				then
 				#echo "num " $X
 				cat digits/"$X".ulaw >> rpt/nodenames/"$node".ulaw
+				fi
 				;;
 			-)
+				if [ ! "$dryrun" ]
+				then
 				#echo "dash " $X
 				cat letters/dash.ulaw >> rpt/nodenames/"$node".ulaw
+				fi
 				;;
 			/)
+				if [ ! "$dryrun" ]
+				then
 				#echo "slash " $X
 				cat letters/slash.ulaw >> rpt/nodenames/"$node".ulaw
+				fi
 				;;
 			*)
 				echo "unknown" $node $call
