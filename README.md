@@ -1,9 +1,9 @@
 # allstar_nodesounds
 ## Script to populate callsign ulaws for the node list
 
-This script will parse the US callsigns in the */var/log/asterisk/astdb.txt* list of nodes. 
+This script will parse the */var/log/asterisk/astdb.txt* list of nodes for US callsigns and create a custom ulaw sound file which reads out the node's callsign. 
 
-Currently it does rudementary exclusion of non-callsign info, only allowing callsigns with **/** or **hyphen**.
+Currently it does rudementary exclusion of non-callsign info, only allowing well formed callsigns including those with **/** or **hyphen** suffixes.
 
 It will create ulaw files for any missing nodes in */var/lib/asterisk/sounds/rpt/nodenames* which is where allstar looks for customized names. 
 
@@ -37,5 +37,6 @@ Either edit the file or **carefully** run:
 Which should append the entry to your file. **(Note the above block is one long line with stdout and stderr redirected to files in /tmp)**
 ## Notes:
 - Exclusions are handled brute force with daisy chained grep -v pipes. You can add additional ones as needed
-- variable *callprefix* contains the first letters of US calls. This can be customized, but be cautious that other letters can include words other than callsigns.
+- variable *callprefix* contains the first letters of US calls. This can be customized to include other countries, but be cautious that other letters can include words other than callsigns.
 - variable *callmatch* contains regex to match a typical callsign, including most foreign ones. Debug mode will show if a callsign is valid or not. 
+- The script does not enforce strict error checking on suffixes after a **/** or **-**. Nodes should not have extranious info in the 2nd field with the callsign, but if they did the string would be read out if the node was linked. 
