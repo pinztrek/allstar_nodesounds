@@ -32,8 +32,9 @@ Run it daily by adding to the */etc/cron.daily/allstar-helpers* script:
 > /usr/local/bin/build_nodes.sh >/tmp/build_nodes.run 2>/tmp/build_nodes.err
 
 Either edit the file or **carefully** run:
-> sudo echo "/usr/local/bin/build_nodes.sh >/tmp/build_nodes.run 2>/tmp/build_nodes.err" >> /usr/local/bin/build_nodes.sh >/tmp/build_nodes.run 2>/tmp/build_nodes.err
-Which should append the entry to your file. 
+> sudo echo "/usr/local/bin/build_nodes.sh >/tmp/build_nodes.run 2>/tmp/build_nodes.err" > /usr/local/bin/build_nodes.sh >/tmp/build_nodes.run 2>/tmp/build_nodes.err
+
+Which should append the entry to your file. **(Note the above block is one long line with stdout and stderr redirected to files in /tmp)**
 ## Notes:
 - Exclusions are handled brute force with daisy chained grep -v pipes. You can add additional ones as needed
 - variable *callprefix* contains the first letters of US calls. This can be customized, but be cautious that other letters can include words other than callsigns.
