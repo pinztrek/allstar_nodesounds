@@ -1,5 +1,9 @@
 # allstar_nodesounds
-## Script to populate callsign ulaws for the node list
+## Script to populate custom callsign readout ulaws for the allstar node list
+
+The standard allstarlink distribution has a little known provision to check a specific directory for a *12345.ulaw* file corresponding to a node and play it instead of the standard *"NODE 12345 Connected"*. This works well and really helps reduce confusion for users not familiar with allstar. I had been using customized node readouts for some time that I made manually, which worked find for frequent connections. Ex: Audio recording *KM4BA remote base"* connected was saved as 55871.ulaw.  But if an arbitrary station connected in ASL still just announced the node number as there was no customized file present. 
+
+It occurred to me that we already had a file on the ASL system which had node/callsign combinations which was periodically updated. 
 
 This script will parse the */var/log/asterisk/astdb.txt* list of nodes for US callsigns and create a custom ulaw sound file which reads out the node's callsign. 
 
