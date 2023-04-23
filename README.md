@@ -7,7 +7,7 @@ It occurred to me that we already had a file on the ASL system which had node/ca
 
 This script will parse the */var/log/asterisk/astdb.txt* list of nodes for US callsigns and create a custom ulaw sound file which reads out the node's callsign. 
 
-Currently it does rudementary exclusion of non-callsign info, only allowing well formed callsigns including those with **/** or **hyphen** suffixes.
+Currently it does rudimentary exclusion of non-callsign info, only allowing well formed callsigns including those with **/** or **hyphen** suffixes.
 
 It will create ulaw files for any missing nodes in */var/lib/asterisk/sounds/rpt/nodenames* which is where allstar looks for customized names. 
 
